@@ -16,6 +16,7 @@
 #include "printer.h"
 #include "sphere.h"
 #include "texture.h"
+#include "glBall.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -58,6 +59,10 @@ float Cam_angle; // kat obrotu kamery
 float Cam_r; // promien kamery 
 
 float LightAmbient;
+
+glBall* myBall;
+glObject* pitch;
+glTexture* pitchTex;
 
 
 void PreparePrograms(); // przygotowuje programy przetwarzania 

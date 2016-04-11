@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common.cpp" />
+    <ClCompile Include="glBall.cpp" />
     <ClCompile Include="globject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="printer.cpp" />
@@ -131,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
+    <ClInclude Include="glBall.h" />
     <ClInclude Include="glew.h" />
     <ClInclude Include="globject.h" />
     <ClInclude Include="main.h" />

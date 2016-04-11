@@ -24,6 +24,8 @@ Scene::Scene(int new_width,int new_height)
 	LightAmbient = 0.8;	
 	Cam_angle = 0.0;
 	Cam_r = 5.0;
+	pitch = NULL;
+	pitchTex = NULL;
 	err = 1;	
 }
 //--------------------------------------------------------------------------------------------
@@ -32,6 +34,8 @@ Scene::~Scene()
 {
 	// usun program przetwarzania 
 	if (glIsProgram(program)) glDeleteProgram(program);
+	if (pitch) delete pitch;
+	if (pitchTex) delete pitchTex;
 
 }
 //--------------------------------------------------------------------------------------------
@@ -93,6 +97,22 @@ void Scene::PreparePrograms()
 //--------------------------------------------------------------------------------------------
 void Scene::PrepareObjects()
 {  
+	myBall = new glBall(2.5f);
+
+	pitch = new glObject();
+
+	pitchTex = new glTexture("textures\\pitch.bmp");
+	pitch->SetNormal(-1.0, 0.0, 0.0);
+	pitch->BeginObject(GL_TRIANGLE_STRIP, pitchTex->Bind());
+	float x = -10.0f;
+	float y = 10.0f;
+	float z = 10.0f;
+	pitch->AddVertex(x, y, x, 1.0, 0.0);
+	pitch->AddVertex(x, -y, x, 1.0, 1.0);
+	pitch->AddVertex(x, y, -x, 0.0, 0.0);
+	pitch->AddVertex(x, -y, -x, 0.0, 1.0);
+	pitch->EndObject();
+
 
 
 }
@@ -240,10 +260,10 @@ void Scene::KeyPressed(unsigned char key, int x, int y)
 	 //   case 116: { break;} //F5		
 		//case 117: { break;} //F6		
 		//
-		//case 87: {Cam_r -= 0.5f; break;} //W
-		//case 83: {Cam_r += 0.5f; break;} //S		
-		//case 65: {Cam_angle -= 5.0f; break;} //A
-		//case 68: {Cam_angle += 5.0f; break;} //D
+		case 87: {Cam_r -= 0.5f; break;} //W
+		case 83: {Cam_r += 0.5f; break;} //S		
+		case 65: {Cam_angle -= 5.0f; break;} //A
+		case 68: {Cam_angle += 5.0f; break;} //D
 
 		//case 32: {
 		//			//spacja
@@ -329,7 +349,8 @@ void Scene::Draw()
 	//------------------------------------------------------------------------------------------------------
 	// Rysowanie w trybie perspektywicznym 
 	//------------------------------------------------------------------------------------------------------
-
+	pitch->Draw();
+	myBall->Draw();
 
 		
 	glm::mat4 mTransform = glm::mat4(1.0);
