@@ -201,7 +201,7 @@ void Scene::Init()
 	PrintLog(_msg);
 
 	//  ustaw kolor tla sceny (RGB Z=1.0)
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 	
 	// przygotuj programy shaderow
 	PreparePrograms();
