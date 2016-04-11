@@ -127,7 +127,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="printer.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="skybox.cpp" />
     <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="supporter.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +140,9 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="printer.h" />
     <ClInclude Include="scene.h" />
+    <ClInclude Include="skybox.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="supporter.h" />
     <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
