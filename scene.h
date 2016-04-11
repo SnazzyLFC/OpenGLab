@@ -17,6 +17,7 @@
 #include "sphere.h"
 #include "texture.h"
 #include "glBall.h"
+#include "skybox.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -24,6 +25,7 @@
 
 //----------------------------------- DEFINES -------------------------------------------------
 #define ESCAPE 27
+
 
 //--------------------------------------------------------------------------------------------
 // 								CLASS INTERFACE
@@ -62,23 +64,26 @@ float LightAmbient;
 
 glBall* myBall;
 glObject* pitch;
+glSkyBox* skyBox;
 glTexture* pitchTex;
-
+glObject* floor;
+glTexture* floorTex;
+glSkyBox* post;
 void initializeCamera();
 
 float camPosition[4][3];
 int currentPos;
-
+float AlphaCanal; // kanal alfa do przezroczystosci
 void PreparePrograms(); // przygotowuje programy przetwarzania 
 void PrepareObjects(); // przygotowuje obiekty do wyswietlenia 
-
+void MakeGoal(float H);
 // rozmiary sceny 
 int width;
 int height;
 
 glm::mat4 mProjection;
 glm::mat4 mModelView;
-
+glm::mat4 mTransform;
 // zasoby programu przetwarzania
 GLuint program;
 GLuint vertex_shader;

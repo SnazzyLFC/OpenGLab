@@ -20,8 +20,8 @@ glSkyBox::glSkyBox(float R, float H,char *TextureFile)
 	
 	while (kat <= 360.0)
 	{
-		AddVertex(R*cos(kat*PI/180.0),H/2.0,R*sin(kat*PI/180.0),u, 1.0f);
-		AddVertex(R*cos(kat*PI/180.0),-H/2.0,R*sin(kat*PI/180.0), u);
+		AddVertex(H / 2.0, R*cos(kat*PI/180.0),R*sin(kat*PI/180.0),u, 1.0f);
+		AddVertex(-H / 2.0, R*cos(kat*PI/180.0),R*sin(kat*PI/180.0), u);
 		u += du;
 		kat += dk;		
 	}

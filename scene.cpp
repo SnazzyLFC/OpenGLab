@@ -26,6 +26,7 @@ Scene::Scene(int new_width,int new_height)
 	Cam_r = 5.0;
 	initializeCamera();
 	currentPos = 0;
+	AlphaCanal = 1.0f;
 	pitch = NULL;
 	pitchTex = NULL;
 	err = 1;	
@@ -50,9 +51,9 @@ void Scene::initializeCamera()
 	camPosition[1][1] = 20.0f;
 	camPosition[1][2] = 45.0f;
 
-	camPosition[2][0] = 20.0f;
+	camPosition[2][0] = 35.0f;
 	camPosition[2][1] = 0.0f;
-	camPosition[2][2] = -65.0f;
+	camPosition[2][2] = -45.0f;
 
 	camPosition[3][0] = 80.0f;
 	camPosition[3][1] = 0.0f;
@@ -118,7 +119,7 @@ void Scene::PreparePrograms()
 //--------------------------------------------------------------------------------------------
 void Scene::PrepareObjects()
 {  
-	myBall = new glBall(2.5f);
+	myBall = new glBall(0.5f);
 
 	pitch = new glObject();
 	pitch->SetColor(0.9f, 0.9f, 0.9f);
@@ -133,6 +134,22 @@ void Scene::PrepareObjects()
 	pitch->AddVertex(x, y, -z, 1.0, 1.0);
 	pitch->AddVertex(x, -y, -z, 1.0, 0.0);
 	pitch->EndObject();
+
+	skyBox = new glSkyBox(50, 100, "textures\\sky.bmp");
+
+	floor = new glObject();
+	floor->SetColor(0.9f, 0.9f, 0.9f);
+	floorTex = new glTexture("textures\\beton.bmp");
+
+	for (float p = -100.0f; p <= 100.0f; p = p + 5.0f)
+	{
+		floor->BeginObject(GL_TRIANGLE_STRIP, floorTex->Bind());
+		floor->AddVertex(-5.1f, -100.0f, p, 0.0, 1.0);
+		floor->AddVertex(-5.1f, 100.0f, p, 0.0, 0.0);
+		floor->AddVertex(-5.1f, p, -100.0, 1.0, 1.0);
+		floor->AddVertex(-5.1f, p, 100.0, 1.0, 0.0);
+		floor->EndObject();
+	}
 
 
 	// sciany prostopadle do OY
@@ -272,6 +289,12 @@ void Scene::Animate()
 	rot_y +=5.0;
 }
 //--------------------------------------------------------------------------------------------
+void Scene::MakeGoal(float H)
+{
+	if (post) delete post;
+	post = new glSkyBox(0.25f, H, "textures\\happy.bmp");
+}
+
 // kontrola naciskania klawiszy klawiatury
 void Scene::KeyPressed(unsigned char key, int x, int y) 
 {            
@@ -299,21 +322,25 @@ void Scene::KeyPressed(unsigned char key, int x, int y)
 		case 49: 
 		{
 			currentPos = 0;
+
 			break;
 		}
 		case 50:
 		{
 			currentPos = 1;
+
 			break;
 		}
 		case 51:
 		{
 			currentPos = 2;
+
 			break;
 		}
 		case 52:
 		{
 			currentPos = 3;
+
 			break;
 		}
 		//case 32: {
@@ -367,7 +394,10 @@ void Scene::Draw()
 	int _LightAmbient = glGetUniformLocation(program, "LightAmbient");
 	int _NormalMatrix = glGetUniformLocation(program, "normalMatrix");
 	int _Sampler = glGetUniformLocation(program, "gSampler");
+	int _Alpha = glGetUniformLocation(program, "Alpha");
 
+	// ustaw przezroczystosc
+	glUniform1f(_Alpha, AlphaCanal);
 	// ustaw sampler tekstury 
 	glUniform1i(_Sampler, 0);
 
@@ -405,12 +435,57 @@ void Scene::Draw()
 	//------------------------------------------------------------------------------------------------------
 	// Rysowanie w trybie perspektywicznym 
 	//------------------------------------------------------------------------------------------------------
-	pitch->Draw();
 
+	pitch->Draw();
 	myBall->Draw();
 
-		
+
+	skyBox->Draw();
+	//floor->Draw();
+
+
+	glm::mat4 mModelViewLoc = mModelView;
+	
+	MakeGoal(3.0f);
+	mModelViewLoc = glm::translate(mModelView, glm::vec3(-3.0f, 2.5f, -30.0f));
+	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelViewLoc));
+	post->Draw();
+
+	mModelViewLoc = glm::translate(mModelView, glm::vec3(-3.0f, -2.5f, -30.0f));
+	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelViewLoc));
+	post->Draw();
+
+	MakeGoal(5.0f);
 	glm::mat4 mTransform = glm::mat4(1.0);
+	mModelViewLoc = glm::translate(mModelView, glm::vec3(-1.5f, 0.0f, -30.0f));
+	mTransform = glm::rotate(mTransform, 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	mTransform = glm::rotate(mTransform, 90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	glUniformMatrix4fv(_NormalMatrix, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(mTransform))));
+
+	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelViewLoc*mTransform));
+	post->Draw();
+
+	MakeGoal(3.0f);
+	mModelViewLoc = glm::translate(mModelView, glm::vec3(-3.0f, 2.5f, 30.0f));
+	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelViewLoc));
+	post->Draw();
+
+	mModelViewLoc = glm::translate(mModelView, glm::vec3(-3.0f, -2.5f, 30.0f));
+	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelViewLoc));
+	post->Draw();
+
+	MakeGoal(5.0f);
+	mTransform = glm::mat4(1.0);
+	mModelViewLoc = glm::translate(mModelView, glm::vec3(-1.5f, 0.0f, 30.0f));
+	mTransform = glm::rotate(mTransform, 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	mTransform = glm::rotate(mTransform, 90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	glUniformMatrix4fv(_NormalMatrix, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(mTransform))));
+
+	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelViewLoc*mTransform));
+	post->Draw();
+
+	
+	mTransform = glm::mat4(1.0);
 	mTransform = glm::rotate(glm::mat4(1.0), rot_x, glm::vec3(1.0f, 0.0f, 0.0f));
 	mTransform = glm::rotate(mTransform, rot_y, glm::vec3(0.0f, 1.0f, 0.0f));
 	
