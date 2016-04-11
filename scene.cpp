@@ -100,19 +100,29 @@ void Scene::PrepareObjects()
 	myBall = new glBall(2.5f);
 
 	pitch = new glObject();
-
+	pitch->SetColor(0.9f, 0.9f, 0.9f);
 	pitchTex = new glTexture("textures\\pitch.bmp");
 	pitch->SetNormal(-1.0, 0.0, 0.0);
 	pitch->BeginObject(GL_TRIANGLE_STRIP, pitchTex->Bind());
-	float x = -10.0f;
-	float y = 10.0f;
-	float z = 10.0f;
-	pitch->AddVertex(x, y, x, 1.0, 0.0);
-	pitch->AddVertex(x, -y, x, 1.0, 1.0);
-	pitch->AddVertex(x, y, -x, 0.0, 0.0);
-	pitch->AddVertex(x, -y, -x, 0.0, 1.0);
+	float x = -5.0f;
+	float y = 20.0f;
+	float z = 35.0f;
+	pitch->AddVertex(x, y, z, 0.0, 1.0);
+	pitch->AddVertex(x, -y, z, 0.0, 0.0);
+	pitch->AddVertex(x, y, -z, 1.0, 1.0);
+	pitch->AddVertex(x, -y, -z, 1.0, 0.0);
 	pitch->EndObject();
 
+
+	// sciany prostopadle do OY
+	//pitchTex = new glTexture("textures\\pitch.bmp");
+	//pitch->SetNormal(1.0, 0.0, 0.0);
+	//pitch->BeginObject(GL_TRIANGLE_STRIP, pitchTex->Bind());
+	//pitch->AddVertex(0.5, 0.5, 0.5, 1.0, 0.0);
+	//pitch->AddVertex(0.5, -0.5, 0.5, 1.0, 1.0);
+	//pitch->AddVertex(0.5, 0.5, -0.5, 0.0, 0.0);
+	//pitch->AddVertex(0.5, -0.5, -0.5, 0.0, 1.0);
+	//pitch->EndObject();
 
 
 }
@@ -350,6 +360,7 @@ void Scene::Draw()
 	// Rysowanie w trybie perspektywicznym 
 	//------------------------------------------------------------------------------------------------------
 	pitch->Draw();
+
 	myBall->Draw();
 
 		
