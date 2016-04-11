@@ -24,6 +24,8 @@ Scene::Scene(int new_width,int new_height)
 	LightAmbient = 0.8;	
 	Cam_angle = 0.0;
 	Cam_r = 5.0;
+	initializeCamera();
+	currentPos = 0;
 	pitch = NULL;
 	pitchTex = NULL;
 	err = 1;	
@@ -36,6 +38,25 @@ Scene::~Scene()
 	if (glIsProgram(program)) glDeleteProgram(program);
 	if (pitch) delete pitch;
 	if (pitchTex) delete pitchTex;
+
+}
+void Scene::initializeCamera()
+{
+	camPosition[0][0] = 55.0f;
+	camPosition[0][1] = -20.0f;
+	camPosition[0][2] = 0.0f;
+
+	camPosition[1][0] = 2.0f;
+	camPosition[1][1] = 20.0f;
+	camPosition[1][2] = 45.0f;
+
+	camPosition[2][0] = 20.0f;
+	camPosition[2][1] = 0.0f;
+	camPosition[2][2] = -65.0f;
+
+	camPosition[3][0] = 80.0f;
+	camPosition[3][1] = 0.0f;
+	camPosition[3][2] = 0.0f;
 
 }
 //--------------------------------------------------------------------------------------------
@@ -275,6 +296,26 @@ void Scene::KeyPressed(unsigned char key, int x, int y)
 		case 65: {Cam_angle -= 5.0f; break;} //A
 		case 68: {Cam_angle += 5.0f; break;} //D
 
+		case 49: 
+		{
+			currentPos = 0;
+			break;
+		}
+		case 50:
+		{
+			currentPos = 1;
+			break;
+		}
+		case 51:
+		{
+			currentPos = 2;
+			break;
+		}
+		case 52:
+		{
+			currentPos = 3;
+			break;
+		}
 		//case 32: {
 		//			//spacja
 		//			break;
@@ -332,11 +373,16 @@ void Scene::Draw()
 
 	// ustaw macierz projekcji na perspektywiczna
 	glUniformMatrix4fv(_Projection, 1, GL_FALSE, glm::value_ptr(mProjection));
-	
+	glm::vec3 up;
+	up = glm::vec3(0.0f, 1.0f, 0.0f);
+	if (currentPos == 2 || currentPos == 1)
+	{
+		up = glm::vec3(1.0f, 0.0f, 0.0f);
+	}
 	// inicjuj macierz MV z polozeniem obserwatora
-	glm::mat4 mModelView = glm::lookAt(glm::vec3(Cam_r*cos(PI*Cam_angle/180.0), 0.0f, Cam_r*sin(PI*Cam_angle/180.0)), 
+	glm::mat4 mModelView = glm::lookAt(glm::vec3(camPosition[currentPos][0], camPosition[currentPos][1], camPosition[currentPos][2]),
 										glm::vec3(0.0f),
-										glm::vec3(0.0f, 1.0f, 0.0f));
+										up);
 	// wyslij MV do shadera
 	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelView));
 

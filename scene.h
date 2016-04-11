@@ -64,6 +64,10 @@ glBall* myBall;
 glObject* pitch;
 glTexture* pitchTex;
 
+void initializeCamera();
+
+float camPosition[4][3];
+int currentPos;
 
 void PreparePrograms(); // przygotowuje programy przetwarzania 
 void PrepareObjects(); // przygotowuje obiekty do wyswietlenia 
