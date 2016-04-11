@@ -20,8 +20,7 @@ Scene::Scene(int new_width,int new_height)
 	width = new_width;
 	height = new_height;	
 	rot_x = 0.0;
-	rot_y = 0.0;
-	Axes = NULL;		
+	rot_y = 0.0;	
 	LightAmbient = 0.8;	
 	Cam_angle = 0.0;
 	Cam_r = 5.0;
@@ -33,7 +32,7 @@ Scene::~Scene()
 {
 	// usun program przetwarzania 
 	if (glIsProgram(program)) glDeleteProgram(program);
-	if (Axes) delete Axes;	
+
 }
 //--------------------------------------------------------------------------------------------
 // przygotowuje programy cienionwania 
@@ -94,20 +93,7 @@ void Scene::PreparePrograms()
 //--------------------------------------------------------------------------------------------
 void Scene::PrepareObjects()
 {  
-	Axes = new glObject();	
-	Moon = new glSphere(1,"textures\\moon.bmp");
 
-	Axes->BeginObject(GL_LINES);
-	Axes->SetColor(1.0,0.0,0.0); // os X w kolorze czerwonym
-	Axes->AddVertex(0.0,0.0,0.0);
-	Axes->AddVertex(10.0,0.0,0.0);
-	Axes->SetColor(0.0,1.0,0.0); // os Y w kolorze zielonym 
-	Axes->AddVertex(0.0,0.0,0.0);
-	Axes->AddVertex(0.0,10.0,0.0);
-	Axes->SetColor(0.0,0.0,1.0); // os Z w kolorze niebieskim 
-	Axes->AddVertex(0.0,0.0,0.0);
-	Axes->AddVertex(0.0,0.0,10.0);
-	Axes->EndObject();
 
 }
 //--------------------------------------------------------------------------------------------
@@ -215,7 +201,7 @@ void Scene::Init()
 	PrintLog(_msg);
 
 	//  ustaw kolor tla sceny (RGB Z=1.0)
-	glClearColor(0.0f, 0.0f, 0.3f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
 	// przygotuj programy shaderow
 	PreparePrograms();
@@ -241,28 +227,28 @@ void Scene::KeyPressed(unsigned char key, int x, int y)
 	if (key == ESCAPE) ThrowException("Zatrzymaj program");
 	switch(key)
 	{
-		case 37: {rot_y -= 5.0f; break;}
-		case 38: {rot_x -= 5.0f; break;}
-		case 39: {rot_y += 5.0f; break;}
-		case 40: {rot_x += 5.0f; break;}		
-		case 112: {LightAmbient += 0.1f; break;} // F1		
-		case 113: {LightAmbient -= 0.1f; break;} //F2		
-		
-		case 114: { break;} //F3		
-		case 115: { break;} //F4		
+		//case 37: {rot_y -= 5.0f; break;}
+		//case 38: {rot_x -= 5.0f; break;}
+		//case 39: {rot_y += 5.0f; break;}
+		//case 40: {rot_x += 5.0f; break;}		
+		//case 112: {LightAmbient += 0.1f; break;} // F1		
+		//case 113: {LightAmbient -= 0.1f; break;} //F2		
+		//
+		//case 114: { break;} //F3		
+		//case 115: { break;} //F4		
 
-	    case 116: { break;} //F5		
-		case 117: { break;} //F6		
-		
-		case 87: {Cam_r -= 0.5f; break;} //W
-		case 83: {Cam_r += 0.5f; break;} //S		
-		case 65: {Cam_angle -= 5.0f; break;} //A
-		case 68: {Cam_angle += 5.0f; break;} //D
+	 //   case 116: { break;} //F5		
+		//case 117: { break;} //F6		
+		//
+		//case 87: {Cam_r -= 0.5f; break;} //W
+		//case 83: {Cam_r += 0.5f; break;} //S		
+		//case 65: {Cam_angle -= 5.0f; break;} //A
+		//case 68: {Cam_angle += 5.0f; break;} //D
 
-		case 32: {
-					//spacja
-					break;
-				 }
+		//case 32: {
+		//			//spacja
+		//			break;
+		//		 }
 	}
 	
 }
@@ -344,7 +330,7 @@ void Scene::Draw()
 	// Rysowanie w trybie perspektywicznym 
 	//------------------------------------------------------------------------------------------------------
 
-	Axes->Draw();
+
 		
 	glm::mat4 mTransform = glm::mat4(1.0);
 	mTransform = glm::rotate(glm::mat4(1.0), rot_x, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -354,6 +340,6 @@ void Scene::Draw()
 
 	glUniformMatrix4fv(_ModelView, 1, GL_FALSE, glm::value_ptr(mModelView*mTransform));
 		
-	Moon->Draw();	
+
 }	
 //------------------------------- KONIEC PLIKU -----------------------------------------------

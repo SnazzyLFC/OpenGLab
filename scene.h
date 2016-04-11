@@ -59,11 +59,6 @@ float Cam_r; // promien kamery
 
 float LightAmbient;
 
-glObject *Cube;
-glObject *Axes;
-
-
-glSphere *Moon;
 
 void PreparePrograms(); // przygotowuje programy przetwarzania 
 void PrepareObjects(); // przygotowuje obiekty do wyswietlenia 
